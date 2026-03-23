@@ -1,0 +1,23 @@
+{
+  "name": "webot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "WeChat Bot with OpenAI + HTTP push API",
+  "type": "module",
+  "scripts": {
+    "login": "tsx main.ts login",
+    "start": "node --env-file=.env --import=tsx/esm main.ts start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.0",
+    "hono": "^4.7.0",
+    "openai": "^4.0.0",
+    "weixin-agent-sdk": "file:../weixin-agent-sdk/packages/sdk"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.8.0"
+  }
+}
