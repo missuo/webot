@@ -1,30 +1,32 @@
 # webot
 
-A push notification assistant for WeChat, powered by [ClawBot](https://github.com/nicepkg/claw-bot). Think of it as [Bark](https://github.com/Finb/Bark) — but entirely inside WeChat, with no extra app to install.
+A push notification assistant for Weixin, powered by [ClawBot](https://github.com/nicepkg/claw-bot). Think of it as [Bark](https://github.com/Finb/Bark) — but entirely inside Weixin, with no extra app to install.
+
+> **Note:** Currently only **Weixin** (微信) is supported. WeChat (the international version) is not yet supported by ClawBot.
 
 ## Why
 
-Bark is great for push notifications on iOS, but it requires installing a separate app. If you already live in WeChat, why not receive notifications right there?
+Bark is great for push notifications on iOS, but it requires installing a separate app. If you already live in Weixin, why not receive notifications right there?
 
-**webot** turns a WeChat account into a push endpoint. Any system that can make an HTTP request — CI/CD pipelines, monitoring alerts, cron jobs, home automation, scripts — can push messages directly to your WeChat.
+**webot** turns a Weixin account into a push endpoint. Any system that can make an HTTP request — CI/CD pipelines, monitoring alerts, cron jobs, home automation, scripts — can push messages directly to your Weixin.
 
 ## How It Works
 
-webot uses [ClawBot](https://github.com/nicepkg/claw-bot) (via `weixin-agent-sdk`) to connect to WeChat as a bot. It keeps a long-polling session with the WeChat API and exposes a simple HTTP push API.
+webot uses [ClawBot](https://github.com/nicepkg/claw-bot) (via `weixin-agent-sdk`) to connect to Weixin as a bot. It keeps a long-polling session with the Weixin API and exposes a simple HTTP push API.
 
 ```
-External System                        WeChat
+External System                        Weixin
   (curl, webhook,        ┌──────────┐
-   CI/CD, script)  ────► │  webot   │ ────► Your WeChat
+   CI/CD, script)  ────► │  webot   │ ────► Your Weixin
                           │          │       (push notification)
   POST /api/send          │ HTTP API │
   + Bearer token          │ + WX Bot │
                           └──────────┘
 ```
 
-1. **You message the bot first** from WeChat — this is required by the WeChat platform to establish a session.
+1. **You message the bot first** from Weixin — this is required by the Weixin platform to establish a session.
 2. The bot replies with your **user ID** and the **push API details** (token + endpoint), ready to copy and use.
-3. From then on, any HTTP `POST /api/send` with your user ID will deliver a message to your WeChat.
+3. From then on, any HTTP `POST /api/send` with your user ID will deliver a message to your Weixin.
 
 Optionally, you can enable OpenAI to give the bot AI chat capabilities — but the core use case is push notifications.
 
@@ -33,7 +35,7 @@ Optionally, you can enable OpenAI to give the bot AI chat capabilities — but t
 ### Prerequisites
 
 - Node.js >= 22
-- A WeChat account
+- A Weixin account
 
 ### Setup
 
@@ -45,7 +47,7 @@ cd webot
 # Install dependencies
 pnpm install
 
-# Link your WeChat account (scan QR code in terminal)
+# Link your Weixin account (scan QR code in terminal)
 pnpm run login
 
 # Configure
@@ -59,7 +61,7 @@ cp .env.example .env
 pnpm start
 ```
 
-Then send any message to the bot from WeChat. It will reply with something like:
+Then send any message to the bot from Weixin. It will reply with something like:
 
 ```
 Push API ready:
@@ -95,7 +97,7 @@ All configuration is via `.env`. See [`.env.example`](.env.example).
 
 ### `POST /api/send`
 
-Push a message to a WeChat user. Requires `Authorization: Bearer <API_TOKEN>`.
+Push a message to a Weixin user. Requires `Authorization: Bearer <API_TOKEN>`.
 
 ```json
 {
@@ -116,7 +118,7 @@ Push a message to a WeChat user. Requires `Authorization: Bearer <API_TOKEN>`.
 
 Health check. Returns `{"status": "ok"}`.
 
-> **Note:** You can only push messages to users who have previously messaged the bot. This is a WeChat platform requirement — each session is initiated by the user.
+> **Note:** You can only push messages to users who have previously messaged the bot. This is a Weixin platform requirement — each session is initiated by the user.
 
 ## Deployment
 
@@ -169,7 +171,7 @@ CMD ["node", "--env-file=.env", "--import=tsx/esm", "main.ts", "start"]
 
 ### Notes
 
-- Run `pnpm run login` once to link your WeChat account. The login token is persisted locally — subsequent restarts reuse it unless it expires.
+- Run `pnpm run login` once to link your Weixin account. The login token is persisted locally — subsequent restarts reuse it unless it expires.
 - Put a reverse proxy (nginx, Caddy) in front if you want HTTPS for the push API.
 - Set `HTTP_PORT` if port 3000 conflicts with other services.
 
