@@ -1,0 +1,12 @@
+services:
+  webot:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-3000}:${HTTP_PORT:-3000}"
+    env_file: .env
+    volumes:
+      - weixin-data:/app/.weixin
+
+volumes:
+  weixin-data:
